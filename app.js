@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
         traditional: {
             background: 'linear-gradient(135deg, #E2136E 0%, #9C1663 100%)',
             elements: [
-                { type: 'moon', x: 'right-6', y: 'top-6' },
+                // Move moon to bottom-right corner instead of top
+                { type: 'moon', x: 'bottom-10', y: 'right-10' },
                 { type: 'stars', count: 20 }
             ],
             fontClass: 'font-semibold'
@@ -40,21 +41,25 @@ document.addEventListener('DOMContentLoaded', function() {
         modern: {
             background: 'linear-gradient(135deg, #E2136E 0%, #FF4D94 100%)',
             elements: [
-                { type: 'crescent', x: 'right-10', y: 'top-10' },
-                { type: 'lantern', x: 'left-10', y: 'top-20' },
-                { type: 'lantern', x: 'right-16', y: 'bottom-20' }
+                // Move crescent to bottom-left corner
+                { type: 'crescent', x: 'bottom-10', y: 'left-10' },
+                // Adjust lantern positions to sides
+                { type: 'lantern', x: 'left-5', y: 'top-1/3' },
+                { type: 'lantern', x: 'right-5', y: 'bottom-1/3' }
             ],
             fontClass: 'font-medium'
         },
         cute: {
             background: 'linear-gradient(135deg, #FF90B9 0%, #E2136E 100%)',
             elements: [
-                { type: 'moon', x: 'right-8', y: 'top-8', animation: 'float-animation' },
+                // Move moon to bottom corner with animation
+                { type: 'moon', x: 'bottom-10', y: 'left-10', animation: 'float-animation' },
                 { type: 'stars', count: 30 }
             ],
             fontClass: 'font-bold'
         }
     };
+    
 
     generateBtn.addEventListener('click', function() {
         const bkashNumber = document.getElementById('bkashNumber').value;
@@ -95,30 +100,29 @@ document.addEventListener('DOMContentLoaded', function() {
         
 
         cardHTML += `
-                <div class="p-8 flex flex-col items-center justify-between h-full relative z-10">
-                    <div class="text-center mb-4">
-                        <h2 class="text-white text-2xl md:text-3xl ${template.fontClass} mb-2">${heading}</h2>
-                        <div class="w-16 h-1 bg-white mx-auto rounded-full opacity-70 mb-4"></div>
-                    </div>
-                    
-                    <div class="flex flex-col items-center">
-                        <div class="qr-container mb-4">
-                            <img src="${uploadedQrCode}" alt="QR Code" class="qr-code-img">
-                        </div>
-                        <p class="text-white text-lg mb-1">বিকাশে সালামি পাঠান</p>
-                        <p class="text-white text-lg font-bold">${bkashNumber}</p>
-                        <p class="text-white mt-2 opacity-90">${name}</p>
-                    </div>
-                    
-                    <div class="text-center mt-4">
-                        <p class="text-white text-sm md:text-base opacity-90">${message}</p>
-                        <div class="mt-3 text-white text-xs opacity-70">
-                            <p>ডিজিটাল ঈদ কার্ড | bKash Eid Card Generator</p>
-                        </div>
-                    </div>
+        <div class="p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between h-full relative z-10">
+            <div class="text-center mb-4 card-content w-full max-w-xs mx-auto">
+                <h2 class="text-white text-xl sm:text-2xl md:text-3xl ${template.fontClass} mb-2">${heading}</h2>
+                <div class="w-16 h-1 bg-white mx-auto rounded-full opacity-70 mb-2"></div>
+            </div>
+            
+            <div class="flex flex-col items-center card-content w-full max-w-xs mx-auto">
+                <div class="qr-container mb-4 w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48">
+                    <img src="${uploadedQrCode}" alt="QR Code" class="qr-code-img">
+                </div>
+                <p class="text-white text-base sm:text-lg mb-1">বিকাশে সালামি পাঠান</p>
+                <p class="text-white text-base sm:text-lg font-bold">${bkashNumber}</p>
+                <p class="text-white mt-2 opacity-90">${name}</p>
+            </div>
+            
+            <div class="text-center mt-4 card-content w-full max-w-xs mx-auto">
+                <p class="text-white text-xs sm:text-sm md:text-base opacity-90">${message}</p>
+                <div class="mt-3 text-white text-xs opacity-70">
+                    <p>ডিজিটাল ঈদ কার্ড | bKash Eid Card Generator</p>
                 </div>
             </div>
-        `;
+        </div>
+    `;
         
         cardPreview.innerHTML = cardHTML;
         cardActions.classList.remove('hidden');
@@ -244,5 +248,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 shareBtn.disabled = false;
             });
         }, 100);
+    });
+
+    function generateElementHTML(element, type) {
+        if (type === 'moon') {
+            return `<div class="moon absolute ${element.x} ${element.y} ${element.animation || ''}"></div>`;
+        } else if (type === 'crescent') {
+            return `<div class="crescent absolute ${element.x} ${element.y} ${element.animation || ''}"></div>`;
+        } else if (type === 'lantern') {
+            return `<div class="lantern absolute ${element.x} ${element.y} ${element.animation || ''}"></div>`;
+        }
+        return '';
+    }
+    
+    // When adding elements to the card, replace this part of your code:
+    // Add decorative elements
+    template.elements.forEach(element => {
+        if (element.type !== 'stars') {  // Handle stars separately
+            cardHTML += generateElementHTML(element, element.type);
+        }
     });
 });

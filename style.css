@@ -176,3 +176,68 @@ body {
     max-height: 100px;
     margin-top: 0.5rem;
 }
+
+.moon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    z-index: 1;
+}
+
+.crescent {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border-radius: 50%;
+    box-shadow: inset 7px -7px 0 0 gold;
+    transform: rotate(20deg);
+    z-index: 1;
+}
+
+.lantern {
+    position: absolute;
+    width: 30px;
+    height: 40px;
+    background: rgba(255, 200, 0, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 200, 0, 0.5);
+    z-index: 1;
+}
+
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.card-content {
+    position: relative;
+    z-index: 5;
+    background-color: rgba(226, 19, 110, 0.4);
+    border-radius: 12px;
+    padding: 10px;
+    backdrop-filter: blur(2px);
+    margin: 5px 0;
+}
+
+@media (max-width: 640px) {
+    .moon, .crescent {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .lantern {
+        width: 25px;
+        height: 35px;
+    }
+}
+

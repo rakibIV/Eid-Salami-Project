@@ -154,34 +154,48 @@ document.addEventListener('DOMContentLoaded', function() {
     
     downloadBtn.addEventListener('click', function() {
         const cardElement = document.querySelector('.card');
-        
-        const originalButtonText = downloadBtn.innerHTML;
-        downloadBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
-        downloadBtn.disabled = true;
-        
-        setTimeout(() => {
-            html2canvas(cardElement, {
-                scale: 2,
-                backgroundColor: null,
-                logging: false,
-                allowTaint: true,
-                useCORS: true
-            }).then(canvas => {
-                const image = canvas.toDataURL('image/png');
                 
-                const link = document.createElement('a');
-                link.href = image;
-                link.download = 'bKash-Eid-Card.png';
+                const originalButtonText = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
+                downloadBtn.disabled = true;
                 
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // Set a fixed width and height for download to ensure consistency
+                const originalWidth = cardElement.offsetWidth;
+                const originalHeight = cardElement.offsetHeight;
                 
-                downloadBtn.innerHTML = originalButtonText;
-                downloadBtn.disabled = false;
-            }).catch(error => {
-                console.error('Error generating image:', error);
-                alert('দুঃখিত, ছবি তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                // Force dimensions for output
+                cardElement.style.width = '360px';
+                cardElement.style.height = '640px';
+                
+                setTimeout(() => {
+                    html2canvas(cardElement, {
+                        scale: 2,
+                        backgroundColor: null,
+                        logging: false,
+                        allowTaint: true,
+                        useCORS: true,
+                        width: 360,
+                        height: 640
+                    }).then(canvas => {
+                        const image = canvas.toDataURL('image/png');
+                        
+                        const link = document.createElement('a');
+                        link.href = image;
+                        link.download = 'bKash-Eid-Card.png';
+                        
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        // Restore original dimensions
+                        cardElement.style.width = '';
+                        cardElement.style.height = '';
+                        
+                        downloadBtn.innerHTML = originalButtonText;
+                        downloadBtn.disabled = false;
+                    }).catch(error => {
+                        console.error('Error generating image:', error);
+                        alert('দুঃখিত, ছবি তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
                 
                 downloadBtn.innerHTML = originalButtonText;
                 downloadBtn.disabled = false;
